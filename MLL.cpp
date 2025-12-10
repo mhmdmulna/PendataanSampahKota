@@ -7,27 +7,19 @@ void createListKota(ListKota &L) {
     L.first = nullptr;
 }
 
-adrKota createElemenKota(dataKota dk) {
+adrKota createElemenKota(dataKota data) {
     adrKota p = new kota;
-    p->info.nama = dk.nama;
-    p->info.luasWilayah = dk.luasWilayah;
-    p->info.jumlahPenduduk = dk.jumlahPenduduk;
-    p->info.indeksKebersihan = dk.indeksKebersihan;
+    p->info = data;
     p->next = nullptr;
     p->firstRiawayat = nullptr;
 
     return p;
 }
 
-adrRiwayat createElemenRiwayat(riwayat data) {
+adrRiwayat createElemenRiwayat(dataRiwayat data) {
     adrRiwayat p = new riwayat;
-    p->tanggal = data.tanggal;
-    p->bobot = data.bobot;
-    p->petugas = data.petugas;
-    p->jenisSampah = data.jenisSampah;
-    p->jamPengambilan = data.jamPengambilan;
     p->next = nullptr;
-
+    p->info = data;
     return p;
 }
 
@@ -94,10 +86,10 @@ void display(ListKota L) {
     adrRiwayat q;
 
     while (p != nullptr) {
-        cout << p->nama << endl;
+        cout << p->info.nama << endl;
         q = p->firstRiawayat;
         while (q != nullptr) {
-            cout << q->jenisSampah << ", ";
+            cout << q->info.jenisSampah << ", ";
         }
         q = q->next;
         cout << endl;
@@ -105,19 +97,15 @@ void display(ListKota L) {
     p = p->next;
 }
 
-void updateRiwayat(adrRiwayat &p, riwayat u) {
-    p->tanggal = u.tanggal;
-    p->bobot = u.bobot;
-    p->petugas = u.petugas;
-    p->jenisSampah = u.jenisSampah;
-    p->jamPengambilan = u.jamPengambilan;
+void updateRiwayat(adrRiwayat &p, dataRiwayat u) {
+    p->info = u;
 }
 
 adrKota searchKota(ListKota L, string namaK) {
     adrKota p = L.first;
 
     while (p != nullptr) {
-        if (p->nama == namaK) {
+        if (p->info.nama == namaK) {
             return p;
         }
         p = p->next;

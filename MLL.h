@@ -14,6 +14,14 @@ struct dataKota {
     int indeksKebersihan;
 };
 
+struct dataRiwayat {
+    double bobot;
+    string petugas;
+    string jenisSampah;
+    char tanggal;
+    char jamPengambilan;
+};
+
 struct kota {
     dataKota info;
     adrKota next;
@@ -21,11 +29,7 @@ struct kota {
 };
 
 struct riwayat {
-    double bobot;
-    string petugas;
-    string jenisSampah;
-    char tanggal;
-    char jamPengambilan;
+    dataRiwayat info;
     adrRiwayat next;
 };
 
@@ -34,8 +38,8 @@ struct ListKota {
 };
 
 void createListKota(ListKota &L);
-adrKota createElemenKota(string namaKota);
-adrRiwayat createElemenRiwayat(riwayat data);
+adrKota createElemenKota(dataKota data);
+adrRiwayat createElemenRiwayat(dataRiwayat data);
 bool isEmptyKota(ListKota L);
 bool isEmptyRiwayat(adrKota p);
 void insertKota(ListKota &L, adrKota p);
