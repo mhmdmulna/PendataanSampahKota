@@ -1,0 +1,123 @@
+#include <iostream>
+#include "MLL.h"
+
+using namespace std;
+
+void createListKota(ListKota &L) {
+    L.first = nullptr;
+}
+
+adrKota createElemenKota(string namaKota) {
+    adrKota p = new kota;
+    p->nama = namaKota;
+    p->Next = nullptr;
+    p->firstRiawayat = nullptr;
+
+    return p;
+}
+
+adrRiwayat createElemenRiwayat(riwayat data) {
+    adrRiwayat p = new riwayat;
+    p->tanggal = data.tanggal;
+    p->bobot = data.bobot;
+    p->petugas = data.petugas;
+    p->jenisSampah = data.jenisSampah;
+    p->next = nullptr;
+
+    return p;
+}
+
+bool isEmptyKota(ListKota L) {
+    return L.first == nullptr;
+}
+
+bool isEmptyRiwayat(adrKota p) {
+    return p->firstRiawayat == nullptr;
+}
+
+void insertKota(ListKota &L, adrKota p) {
+    adrKota q = L.first;
+
+    if (isEmptyKota(L)) {
+        L.first = p;
+    } else {
+        while (q->Next != nullptr) {
+            q = q->Next;
+        }
+        q->Next = p;
+    }
+}
+
+void insertRiwayat(adrKota &p, adrRiwayat q) {
+    adrRiwayat r = p->firstRiawayat;
+
+    if (isEmptyRiwayat(p)) {
+        p->firstRiawayat = q;
+    } else {
+        while (r->next != nullptr) {
+            r = r->next;
+        }
+        r->next = q;
+    }
+}
+
+void deleteFirstRiwayat(adrKota p, adrRiwayat q) {
+    p->firstRiawayat = q->next;
+    q->next = nullptr;
+}
+
+void deleteLastRiwayat(adrKota p, adrRiwayat q) {
+    adrRiwayat r = p->firstRiawayat;
+
+    while (r->next != q) {
+        r = r->next;
+    }
+    r->next = nullptr;
+}
+
+void deleteAfterRiwayat(adrKota p, adrRiwayat q) {
+    adrRiwayat r = p->firstRiawayat;
+
+    while (r->next != q) {
+        r = r->next;
+    }
+    r->next = q->next;
+    q->next = nullptr;
+}
+
+void display(ListKota L) {
+    adrKota p = L.first;
+    adrKota q;
+
+    while (p != nullptr) {
+        cout << p->nama << endl;
+        q = p->firstRiawayat;
+        while (q != nullptr) {
+            cout << q->jenisSampah << ", ";
+        }
+        q = q->next;
+        cout << endl;
+    }
+    p = p->Next;
+}
+
+adrRiwayat updateRiwayat(adrRiwayat p, riwayat u) {
+    p->tanggal = u.tanggal;
+    p->bobot = u.bobot;
+    p->petugas = u.petugas;
+    p->jenisSampah = u.jenisSampah;
+
+    return p;
+}
+
+adrKota searchKota(ListKota L, string namaK) {
+    adrKota p = L.first;
+
+    while (p != nullptr) {
+        if (p->nama == namaK) {
+            return p;
+        }
+        p = p->Next;
+    }
+    return nullptr;
+}
