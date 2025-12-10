@@ -7,9 +7,12 @@ void createListKota(ListKota &L) {
     L.first = nullptr;
 }
 
-adrKota createElemenKota(string namaKota) {
+adrKota createElemenKota(dataKota dk) {
     adrKota p = new kota;
-    p->nama = namaKota;
+    p->info.nama = dk.nama;
+    p->info.luasWilayah = dk.luasWilayah;
+    p->info.jumlahPenduduk = dk.jumlahPenduduk;
+    p->info.indeksKebersihan = dk.indeksKebersihan;
     p->next = nullptr;
     p->firstRiawayat = nullptr;
 
@@ -22,6 +25,7 @@ adrRiwayat createElemenRiwayat(riwayat data) {
     p->bobot = data.bobot;
     p->petugas = data.petugas;
     p->jenisSampah = data.jenisSampah;
+    p->jamPengambilan = data.jamPengambilan;
     p->next = nullptr;
 
     return p;
@@ -101,13 +105,12 @@ void display(ListKota L) {
     p = p->next;
 }
 
-adrRiwayat updateRiwayat(adrRiwayat p, riwayat u) {
+void updateRiwayat(adrRiwayat &p, riwayat u) {
     p->tanggal = u.tanggal;
     p->bobot = u.bobot;
     p->petugas = u.petugas;
     p->jenisSampah = u.jenisSampah;
-
-    return p;
+    p->jamPengambilan = u.jamPengambilan;
 }
 
 adrKota searchKota(ListKota L, string namaK) {
