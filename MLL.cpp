@@ -10,7 +10,7 @@ void createListKota(ListKota &L) {
 adrKota createElemenKota(string namaKota) {
     adrKota p = new kota;
     p->nama = namaKota;
-    p->Next = nullptr;
+    p->next = nullptr;
     p->firstRiawayat = nullptr;
 
     return p;
@@ -41,10 +41,10 @@ void insertKota(ListKota &L, adrKota p) {
     if (isEmptyKota(L)) {
         L.first = p;
     } else {
-        while (q->Next != nullptr) {
-            q = q->Next;
+        while (q->next != nullptr) {
+            q = q->next;
         }
-        q->Next = p;
+        q->next = p;
     }
 }
 
@@ -87,7 +87,7 @@ void deleteAfterRiwayat(adrKota p, adrRiwayat q) {
 
 void display(ListKota L) {
     adrKota p = L.first;
-    adrKota q;
+    adrRiwayat q;
 
     while (p != nullptr) {
         cout << p->nama << endl;
@@ -98,7 +98,7 @@ void display(ListKota L) {
         q = q->next;
         cout << endl;
     }
-    p = p->Next;
+    p = p->next;
 }
 
 adrRiwayat updateRiwayat(adrRiwayat p, riwayat u) {
@@ -117,7 +117,7 @@ adrKota searchKota(ListKota L, string namaK) {
         if (p->nama == namaK) {
             return p;
         }
-        p = p->Next;
+        p = p->next;
     }
     return nullptr;
 }
