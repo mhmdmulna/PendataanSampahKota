@@ -18,14 +18,14 @@ struct dataRiwayat {
     double bobot;
     string petugas;
     string jenisSampah;
-    char tanggal;
-    char jamPengambilan;
+    string tanggal;
+    string jamPengambilan;
 };
 
 struct kota {
     dataKota info;
     adrKota next;
-    adrRiwayat firstRiawayat;
+    adrRiwayat firstRiwayat;
 };
 
 struct riwayat {
@@ -50,5 +50,10 @@ void deleteAfterRiwayat(adrKota p, adrRiwayat q);
 void display(ListKota L);
 void updateRiwayat(adrRiwayat p, riwayat u);
 adrKota searchKota(ListKota L, string namaK);
+void indeksMin(ListKota L);
+void indeksMax(ListKota L);
+void bobotMin(ListKota L);
+void bobotMax(ListKota L);
+void jumlahSampahKota(ListKota L);
 
 #endif // MLL_H_INCLUDED
