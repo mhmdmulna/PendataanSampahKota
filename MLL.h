@@ -57,9 +57,10 @@ void deleteKota(ListKota &L, string namaKota);
 
 // SEARCH & UPDATE
 void updateRiwayat(adrRiwayat p, riwayat u);
-void updateKota(ListKota &L, string namak);
+void updateKota(ListKota &L);
 adrKota searchKota(ListKota L, string namaK);
 void searchJenisSampah(ListKota L, string jenisSampah);
+adrRiwayat getRiwayatByIndex(adrKota pKota, int index);
 
 // DISPLAY & FEATURE
 void display(ListKota L);
@@ -68,8 +69,13 @@ void indeksMax(ListKota L);
 void bobotMin(ListKota L);
 void bobotMax(ListKota L);
 void jumlahSampahKota(ListKota L);
+void tampilkanRiwayatBernomor(adrKota pKota);
+void tampilkanListKota(ListKota L);
 
 // SORTING
-void sortingTanggal(ListKota L);
+void sortingTanggalTerlama(ListKota L);
+void sortingTanggalTerbaru(ListKota L);
+void sortingBobotTerendah(ListKota L);
+void sortingBobotTertinggi(ListKota L);
 
 #endif // MLL_H_INCLUDED
