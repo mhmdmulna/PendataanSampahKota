@@ -1,0 +1,10 @@
+12.5 Agus Organik 10 02 24 08:30 Bandung
+8.3 Budi Anorganik 11 02 24 09:15 Bandung
+15.0 Wati Organik 12 02 24 13:45 Jakarta
+9.7 Tono Anorganik 13 02 24 07:50 Surabaya
+5.5 Mega Organik 14 02 24 10:20 Medan
+6.8 Rudi Anorganik 15 02 24 11:05 Jakarta
+7.2 Sari Organik 16 02 24 16:30 Semarang
+13.4 Deni Anorganik 17 02 24 12:10 Surabaya
+4.9 Lala Organik 18 02 24 08:40 Bandung
+10.2 Erwin Anorganik 19 02 24 09:55 Medan
