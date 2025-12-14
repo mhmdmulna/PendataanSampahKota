@@ -36,7 +36,7 @@ int main() {
         fileRia.close();
     }
     
-    int pilihanUtama = -1, pilihanSub, pilihanTampil;
+    int pilihanUtama = -1, pilihanSub, pilihanTampil, pilihanRange;
     adrKota pKota;
     adrRiwayat pRiwayat; 
     adrRiwayat qTemp = nullptr;
@@ -49,6 +49,7 @@ int main() {
         cout << "1. Kelola Data Kota" << endl;
         cout << "2. Kelola Data Riwayat Sampah" << endl;
         cout << "3. Tampilkan Data" << endl;
+        cout << "4. Menu Query" << endl;
         cout << "0. Keluar" << endl;
         cout << "============================================" << endl;
         cout << ">> Pilihan Anda: ";
@@ -68,17 +69,23 @@ int main() {
             if (pilihanSub == 1) {
                 cout << "\n[INPUT KOTA BARU]" << endl;
                 cout << "Nama Kota (tanpa_spasi) : "; cin >> dk.nama;
-                cout << "Luas Wilayah (Hektar)   : "; cin >> dk.luasWilayah;
-                cout << "Jumlah Penduduk         : "; cin >> dk.jumlahPenduduk;
-                cout << "Indeks Kebersihan (1-10): "; cin >> dk.indeksKebersihan;
-                
-                pKota = createElemenKota(dk);
-                insertKota(L, pKota);
-                cout << ">>> Sukses menambah kota: " << dk.nama << endl;
+                adrKota searchK = searchKota(L, dk.nama);
+                if (searchK == nullptr) {
+                    cout << "Luas Wilayah (Hektar)   : "; cin >> dk.luasWilayah;
+                    cout << "Jumlah Penduduk         : "; cin >> dk.jumlahPenduduk;
+                    cout << "Indeks Kebersihan (1-10): "; cin >> dk.indeksKebersihan;
+                    
+                    pKota = createElemenKota(dk);
+                    insertKota(L, pKota);
+                    cout << ">>> Sukses menambah kota: " << dk.nama << endl;
+                } else {
+                    cout << "Nama kota " << dk.nama << " sudah ada di data. Silahkan masukkan nama kota lain atau menambah riwayat di kota " << dk.nama << "." << endl;
+                }
 
             } else if (pilihanSub == 2) {
                 updateKota(L);
             } else if (pilihanSub == 3) {
+                tampilkanListKota(L);
                 cout << "Masukkan Nama Kota: "; cin >> inputNamaKota;
                 deleteKota(L, inputNamaKota);
             }
@@ -94,6 +101,7 @@ int main() {
             cin >> pilihanSub;
 
             if (pilihanSub == 1) {
+                tampilkanListKota(L);
                 cout << "\n[TAMBAH RIWAYAT]" << endl;
                 cout << "Masukkan Nama Kota Target: ";
                 cin >> inputNamaKota;
@@ -116,57 +124,41 @@ int main() {
                 }
 
             } else if (pilihanSub == 2) {
+                tampilkanListKota(L);
                 cout << "\n[UBAH RIWAYAT]" << endl;
                 cout << "Masukkan Nama Kota Target: ";
                 cin >> inputNamaKota;
 
                 pKota = searchKota(L, inputNamaKota);
+                updateRiwayat(L, pKota);
 
-                if (pKota != nullptr && !isEmptyRiwayat(pKota)) {
-
-                    tampilkanRiwayatBernomor(pKota);
-
-                    int nomor;
-                    cout << "\nPilih nomor riwayat yang ingin diubah: ";
-                    cin >> nomor;
-
-                    adrRiwayat target = getRiwayatByIndex(pKota, nomor);
-
-                    if (target == nullptr) {
-                        cout << ">>> Nomor riwayat tidak valid!" << endl;
-                    } else {
-                        cout << "\n[UPDATE DATA RIWAYAT]" << endl;
-                        cout << "Petugas baru          : "; cin >> target->info.petugas;
-                        cout << "Tanggal baru          : "; cin >> target->info.tanggal;
-                        cout << "Bulan baru            : "; cin >> target->info.bulan;
-                        cout << "Tahun baru            : "; cin >> target->info.tahun;
-                        cout << "Jam baru (hh:mm)      : "; cin >> target->info.jamPengambilan;
-                        cout << "Jenis Sampah baru     : "; cin >> target->info.jenisSampah;
-                        cout << "Bobot baru (kg)       : "; cin >> target->info.bobot;
-
-                        cout << ">>> Riwayat nomor " << nomor << " berhasil diperbarui!" << endl;
-                    }
-                } else {
-                    cout << ">>> Kota tidak ditemukan atau riwayat kosong!" << endl;
-                }
             } else if (pilihanSub == 3) {
+                tampilkanListKota(L);
                 cout << "\n[HAPUS RIWAYAT]" << endl;
                 cout << "Masukkan Nama Kota Target: ";
                 cin >> inputNamaKota;
                 pKota = searchKota(L, inputNamaKota);
+                cout << countRiwayat(pKota);
 
                 if (pKota != nullptr && !isEmptyRiwayat(pKota)) {
-                    cout << "1. Hapus Riwayat Pertama" << endl;
-                    cout << "2. Hapus Riwayat Terakhir" << endl;
-                    cout << ">> Pilihan Hapus: ";
-                    int pilHapus; cin >> pilHapus;
+                    tampilkanRiwayatBernomor(pKota);
+                    
+                    int nomor;
+                    cout << "Masukkan nomor urut riwayat yang ingin dihapus: ";
+                    cin >> nomor;
 
-                    if (pilHapus == 1) {
+                    if (nomor == 1) {
                         deleteFirstRiwayat(pKota, qTemp);
                         cout << ">>> Riwayat pertama berhasil dihapus." << endl;
-                    } else if (pilHapus == 2) {
+                    } else if (nomor == countRiwayat(pKota)) {
                         deleteLastRiwayat(pKota, qTemp);
-                        cout << ">>> Riwayat terakhir berhasil dihapus." << endl;
+                        cout << ">>> Riwayat berhasil dihapus." << endl;
+                    } else if (nomor > 1 && nomor < countRiwayat(pKota)){
+                        adrRiwayat q;
+                        deleteAfterRiwayat(pKota, nomor, q);
+                        cout << ">>> Riwayat berhasil dihapus." << endl;
+                    } else {
+                        cout << "Nomor tidak valid." << endl;
                     }
                 } else {
                     cout << ">>> Kota tidak ditemukan atau Riwayat kosong." << endl;
@@ -178,7 +170,7 @@ int main() {
         case 3:
             cout << "--- MENU TAMPILAN DATA ---" << endl;
             cout << "1. Tampilkan Semua Data (Tabel)" << endl;
-            cout << "2. Tampilkan Berdasarkan Kategori (Filter/Sort)" << endl;
+            cout << "2. Tampilkan Berdasarkan Kategori (Filter/Sort/Counting)" << endl;
             cout << "0. Kembali" << endl;
             cout << ">> Pilihan: ";
             cin >> pilihanSub;
@@ -194,29 +186,153 @@ int main() {
                 cout << "3. Berdasarkan Bobot Sampah (Terendah - Tertinggi)" << endl;
                 cout << "4. Berdasarkan Bobot Sampah (Tertinggi - Terendah)" << endl;
                 cout << "5. Berdasarkan Jenis Sampah (Organik/Anorganik)" << endl;
+                cout << "6. Total Sampah Setiap Kota" << endl;
                 cout << ">> Pilihan Filter: ";
                 cin >> pilihanTampil;
 
                 if (pilihanTampil == 1) {
                     sortingTanggalTerbaru(L);
+                    display(L);
                 } else if (pilihanTampil == 2) {
                     sortingTanggalTerlama(L);
+                    display(L);
                 } else if (pilihanTampil == 3) {
                     sortingBobotTerendah(L);
+                    display(L);
                 } else if (pilihanTampil == 4) {
                     sortingBobotTertinggi(L);
+                    display(L);
                 } else if (pilihanTampil == 5) {
                     cout << "Masukkan Jenis Sampah: ";
                     string jenisCari;
                     cin >> jenisCari;
                     cout << endl;
                     searchJenisSampah(L, jenisCari);
+                } else if (pilihanTampil == 6) {
+                    jumlahSampahKota(L);
                 }
             }
+            break;
+        case 4:
+            cout << "--- MENU QUERY ---" << endl;
+            cout << "1. Tampikan semua riwayat dari kota tertentu dalam urutan tanggal" << endl;
+            cout << "2. Tampilkan semua riwayat dengan bobot tertentu di tanggal, bulan, tahun tertentu" << endl;
+            cout << "3. Tampikan kota dengan indeks tertentu dan bobot serta jenis sampah tertentu" << endl;
+            cout << "0. Kembali" << endl;
+            cout << ">> Pilihan: ";
+            cin >> pilihanSub;
+
+            if (pilihanSub == 1) {
+                cout << "--- PILIHAN URUTAN TANGGAL ---" << endl;
+                cout << "1. Terbaru ke Terlama" << endl;
+                cout << "2. Terlama ke Terbaru" << endl;
+                cout << ">> Pilihan: ";
+                cin >> pilihanTampil;
+
+                if (pilihanTampil == 1) {
+                    tampilkanListKota(L);
+                    cout << "Masukkan Nama Kota Target: ";
+                    cin >> inputNamaKota;
+                    cout << endl;
+                    queryKotaTanggalTerbaru(L, inputNamaKota);
+                } else if (pilihanTampil == 2) {
+                    tampilkanListKota(L);
+                    cout << "Masukkan Nama Kota Target: ";
+                    cin >> inputNamaKota;
+                    cout << endl;
+                    queryKotaTanggalTerlama(L, inputNamaKota);
+                }
+            } else if (pilihanSub == 2) {
+                cout << "--- PILIHAN RANGE BOBOT ---" << endl;
+                cout << "1. Diatas Bobot" << endl;
+                cout << "2. Dibawah Bobot" << endl;
+                cout << ">> Pilihan: ";
+                cin >> pilihanTampil;
+
+                if (pilihanTampil == 1) {
+                    double bobot;
+                    int tanggal, bulan, tahun;
+                    cout << "Masukkan Bobot, Tanggal, Bulan, dan Tahun Target - Contoh (2.5 12 4 25): ";
+                    cin >> bobot >> tanggal >> bulan >> tahun;
+                    cout << endl;
+                    queryDiatasBobotTanggal(L, bobot, tanggal, bulan, tahun);
+                } else if (pilihanTampil == 2) {
+                    double bobot;
+                    int tanggal, bulan, tahun;
+                    cout << "Masukkan Bobot, Tanggal, Bulan, dan Tahun Target - Contoh (2.5 12 4 25): ";
+                    cin >> bobot >> tanggal >> bulan >> tahun;
+                    cout << endl;
+                    queryDibawahBobotTanggal(L, bobot, tanggal, bulan, tahun);
+                } else {
+                    cout << "Pilihan anda tidak valid." << endl;
+                }
+            } else if (pilihanSub == 3) {
+                int pilihIndeks, pilihBobot, pilihJenis;
+                int indeks;
+                double bobot;
+                string rangeIndeks, rangeBobot, jenis;
+
+                cout << "--- PILIHAN RANGE INDEKS ---" << endl;
+                cout << "1. Diatas Indeks" << endl;
+                cout << "2. Dibawah Indeks" << endl;
+                cout << ">> Pilihan: ";
+                cin >> pilihIndeks;
+
+                if (pilihIndeks == 1) {
+                    rangeIndeks = "DIATAS";
+                } else if (pilihIndeks == 2) {
+                    rangeIndeks = "DIBAWAH";
+                }
+
+                cout << endl;
+
+                cout << "--- PILIHAN RANGE BOBOT ---" << endl;
+                cout << "1. Diatas Bobot" << endl;
+                cout << "2. Dibawah Bobot" << endl;
+                cout << ">> Pilihan: ";
+                cin >> pilihBobot;
+
+                if (pilihBobot == 1) {
+                    rangeBobot = "DIATAS";
+                } else if (pilihBobot == 2) {
+                    rangeBobot = "DIBAWAH";
+                }
+
+                cout << endl;
+
+                cout << "--- PILIHAN JENIS SAMPAH ---" << endl;
+                cout << "1. Organik" << endl;
+                cout << "2. Anorganik" << endl;
+                cout << ">> Pilihan: ";
+                cin >> pilihJenis;
+
+                if (pilihJenis == 1) {
+                    jenis = "Organik";
+                } else {
+                    jenis = "Anorganik";
+                }
+
+                cout << endl;
+
+                cout << "Masukkan Nilai Indeks Target : ";
+                cin >> indeks;
+
+                cout << "Masukkan Nilai Bobot Target  : ";
+                cin >> bobot;
+
+                cout << endl;
+
+                queryIndeksBobotJenis(L,indeks,rangeIndeks,bobot,rangeBobot,jenis);
+
+            } else if (pilihanTampil == 2) {
+                
+            } else {
+                cout << "Pilihan anda tidak valid." << endl;
+            }
+            break;
         case 0:
             cout << "Keluar." << endl;
             break;
-            
         default:
             cout << "Pilihan tidak valid." << endl;
         }

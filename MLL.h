@@ -52,11 +52,11 @@ void insertRiwayat(adrKota &p, adrRiwayat q);
 // DELETE
 void deleteFirstRiwayat(adrKota p, adrRiwayat &q);
 void deleteLastRiwayat(adrKota p, adrRiwayat &q);
-void deleteAfterRiwayat(adrKota p, adrRiwayat prec, adrRiwayat &q);
+void deleteAfterRiwayat(adrKota p, int no, adrRiwayat &q);
 void deleteKota(ListKota &L, string namaKota);
 
 // SEARCH & UPDATE
-void updateRiwayat(adrRiwayat p, riwayat u);
+void updateRiwayat(ListKota &L, adrKota pKota);
 void updateKota(ListKota &L);
 adrKota searchKota(ListKota L, string namaK);
 void searchJenisSampah(ListKota L, string jenisSampah);
@@ -68,6 +68,7 @@ void indeksMin(ListKota L);
 void indeksMax(ListKota L);
 void bobotMin(ListKota L);
 void bobotMax(ListKota L);
+int countRiwayat(adrKota Kota);
 void jumlahSampahKota(ListKota L);
 void tampilkanRiwayatBernomor(adrKota pKota);
 void tampilkanListKota(ListKota L);
@@ -77,5 +78,12 @@ void sortingTanggalTerlama(ListKota L);
 void sortingTanggalTerbaru(ListKota L);
 void sortingBobotTerendah(ListKota L);
 void sortingBobotTertinggi(ListKota L);
+
+// QUERY
+void queryKotaTanggalTerbaru(ListKota L, string namaKota);
+void queryKotaTanggalTerlama(ListKota L, string namaKota);
+void queryDiatasBobotTanggal(ListKota L, double bobot, int tanggal, int bulan, int tahun);
+void queryDibawahBobotTanggal(ListKota L, double bobot, int tanggal, int bulan, int tahun);
+void queryIndeksBobotJenis(ListKota L, int indeks, string rangeIndeks, double bobot, string rangeBobot,string jenis);
 
 #endif // MLL_H_INCLUDED
