@@ -1,0 +1,25 @@
+Functional Requirement
+Create : Kota dan Riwayat (DONE)
+Read : Kota dan Riwayat (DONE)
+Update : Kota dan Riwayat (DONE)
+Delete : Kota dan Riwayat (DONE);
+
+Searching : Nama Kota, Jenis Sampah (DONE)
+
+Min&Max : Indeks Kebersihan (Kota), Bobot (Riwayat) (ONGOING)
+
+
+Counting : Jumlah Sampah berdasarkan kota (DONE)
+
+(ONGOING)!!
+cout << "1. Berdasarkan Tanggal (Terbaru - Terlama)" << endl; (DONE)
+cout << "2. Berdasarkan Tanggal (Terlama - Terbaru)" << endl; (DONE)
+cout << "3. Berdasarkan Bobot Sampah (Tertinggi - Terendah)" << endl; (DONE)
+cout << "4. Berdasarkan Jenis Sampah (Organik/Anorganik)" << endl; (DONE)
+
+Query : ... (ONGOING)
+1. Tampilkan semua riwayat sampah dari kota tertentu dalam urutan tanggal terbaru ke terlama. (DONE)
+2. Tampilkan semua riwayat dengan bobot tertentu di tanggal, bulan, tahun tertentu (ONGOING)
+3. 
+
+
