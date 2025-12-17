@@ -18,10 +18,10 @@ struct dataRiwayat {
     double bobot;
     string petugas;
     string jenisSampah;
+    string jamPengambilan;
     int tanggal;
     int bulan;
     int tahun;
-    string jamPengambilan;
 };
 
 struct kota {
@@ -66,8 +66,6 @@ adrRiwayat getRiwayatByIndex(adrKota pKota, int index);
 void display(ListKota L);
 void indeksMin(ListKota L);
 void indeksMax(ListKota L);
-void bobotMin(ListKota L);
-void bobotMax(ListKota L);
 int countRiwayat(adrKota Kota);
 void jumlahSampahKota(ListKota L);
 void tampilkanRiwayatBernomor(adrKota pKota);
@@ -85,5 +83,7 @@ void queryKotaTanggalTerlama(ListKota L, string namaKota);
 void queryDiatasBobotTanggal(ListKota L, double bobot, int tanggal, int bulan, int tahun);
 void queryDibawahBobotTanggal(ListKota L, double bobot, int tanggal, int bulan, int tahun);
 void queryIndeksBobotJenis(ListKota L, int indeks, string rangeIndeks, double bobot, string rangeBobot,string jenis);
+void queryPersentaseSampahPerOrang(ListKota L, int tanggal, int bulan, int tahun);
+void queryKepadatanSampah(ListKota L, int bulan, int tahun);
 
 #endif // MLL_H_INCLUDED

@@ -88,6 +88,8 @@ int main() {
                 tampilkanListKota(L);
                 cout << "Masukkan Nama Kota: "; cin >> inputNamaKota;
                 deleteKota(L, inputNamaKota);
+            } else {
+                cout << "Kembali ke menu awal" << endl;
             }
             break;
 
@@ -108,17 +110,28 @@ int main() {
                 
                 pKota = searchKota(L, inputNamaKota);
                 if (pKota != nullptr) {
-                    cout << "Petugas (tanpa_spasi) : "; cin >> dr.petugas;
-                    cout << "Tanggal               : "; cin >> dr.tanggal;
-                    cout << "Bulan                 : "; cin >> dr.bulan;
-                    cout << "Tahun                 : "; cin >> dr.tahun;
-                    cout << "Jam (hh:mm)           : "; cin >> dr.jamPengambilan;
-                    cout << "Jenis Sampah          : "; cin >> dr.jenisSampah;
-                    cout << "Bobot (kg)            : "; cin >> dr.bobot;
+                    cout << "Petugas (tanpa_spasi)                   : "; 
+                    cin >> dr.petugas;
+                    cout << "Tanggal                                 : "; 
+                    cin >> dr.tanggal;
+                    cout << "Bulan                                   : "; 
+                    cin >> dr.bulan;
+                    cout << "Tahun                                   : "; 
+                    cin >> dr.tahun;
+                    cout << "Jam (hh:mm)                             : "; 
+                    cin >> dr.jamPengambilan;
+                    cout << "Jenis Sampah (Organik/Anorganik)        : "; 
+                    cin >> dr.jenisSampah;
+                    cout << "Bobot (kg)                              : "; 
+                    cin >> dr.bobot;
                     
-                    pRiwayat = createElemenRiwayat(dr);
-                    insertRiwayat(pKota, pRiwayat);
-                    cout << ">>> Sukses menambah riwayat." << endl;
+                    if (dr.tanggal <= 31 && dr.bulan <= 12 && dr.tahun <= 25) {
+                        pRiwayat = createElemenRiwayat(dr);
+                        insertRiwayat(pKota, pRiwayat);
+                        cout << ">>> Sukses menambah riwayat." << endl;
+                    } else {
+                        cout << "Format tanggal,bulan atau tahun invalid." << endl;
+                    }
                 } else {
                     cout << ">>> Error: Kota tidak ditemukan!" << endl;
                 }
@@ -163,14 +176,17 @@ int main() {
                 } else {
                     cout << ">>> Kota tidak ditemukan atau Riwayat kosong." << endl;
                 }
+            } else {
+                cout << "Kembali ke menu awal" << endl;
             }
-
             break;
 
         case 3:
             cout << "--- MENU TAMPILAN DATA ---" << endl;
             cout << "1. Tampilkan Semua Data (Tabel)" << endl;
             cout << "2. Tampilkan Berdasarkan Kategori (Filter/Sort/Counting)" << endl;
+            cout << "3. Tampilkan Kota Terbersih" << endl;
+            cout << "4. Tampilkan Kota Terkotor" << endl;
             cout << "0. Kembali" << endl;
             cout << ">> Pilihan: ";
             cin >> pilihanSub;
@@ -211,6 +227,14 @@ int main() {
                 } else if (pilihanTampil == 6) {
                     jumlahSampahKota(L);
                 }
+            } else if (pilihanSub == 3) {
+                cout << endl;
+                indeksMax(L);
+            } else if (pilihanSub == 4) {
+                cout << endl;
+                indeksMin(L);
+            } else {
+                cout << "Kembali ke menu awal" << endl;
             }
             break;
         case 4:
@@ -218,6 +242,8 @@ int main() {
             cout << "1. Tampikan semua riwayat dari kota tertentu dalam urutan tanggal" << endl;
             cout << "2. Tampilkan semua riwayat dengan bobot tertentu di tanggal, bulan, tahun tertentu" << endl;
             cout << "3. Tampikan kota dengan indeks tertentu dan bobot serta jenis sampah tertentu" << endl;
+            cout << "4. Tampilkan persentase sampah per orang" << endl;
+            cout << "5. Tampilkan beban sampah per hektar di setiap kota" << endl;
             cout << "0. Kembali" << endl;
             cout << ">> Pilihan: ";
             cin >> pilihanSub;
@@ -324,10 +350,21 @@ int main() {
 
                 queryIndeksBobotJenis(L,indeks,rangeIndeks,bobot,rangeBobot,jenis);
 
-            } else if (pilihanTampil == 2) {
+            } else if (pilihanSub == 4) {
+                int tgl, bln, thn;
+                cout << "Masukkan Tanggal, Bulan, Tahun (contoh: 12 4 25): ";
+                cin >> tgl >> bln >> thn;
+                cout << endl;
+                queryPersentaseSampahPerOrang(L, tgl, bln, thn);
                 
+            } else if (pilihanSub == 5) {
+                int bulan, tahun;
+                cout << "Masukkan Bulan dan Tahun (Contoh 5 25): ";
+                cin >> bulan >> tahun;
+                cout << endl;
+                queryKepadatanSampah(L,bulan,tahun);
             } else {
-                cout << "Pilihan anda tidak valid." << endl;
+                cout << "Kembali ke menu awal." << endl;
             }
             break;
         case 0:

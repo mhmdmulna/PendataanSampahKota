@@ -104,17 +104,6 @@ void deleteLastRiwayat(adrKota p, adrRiwayat &q) {
     }
 }
 
-int countRiwayat(adrKota Kota) {
-    adrRiwayat p = Kota->firstRiwayat;
-    int i = 0;
-
-    while (p != nullptr) {
-        i++;
-        p = p->next;
-    }
-    return i;
-}
-
 void deleteAfterRiwayat(adrKota Kota, int no, adrRiwayat &q) {
     int i = 1;
     adrRiwayat p = Kota->firstRiwayat;
@@ -126,6 +115,17 @@ void deleteAfterRiwayat(adrKota Kota, int no, adrRiwayat &q) {
     q = p->next;
     p->next = q->next;
     q->next = nullptr;
+}
+
+int countRiwayat(adrKota Kota) {
+    adrRiwayat p = Kota->firstRiwayat;
+    int i = 0;
+
+    while (p != nullptr) {
+        i++;
+        p = p->next;
+    }
+    return i;
 }
 
 void display(ListKota L) {
@@ -285,7 +285,7 @@ void indeksMin(ListKota L) {
         }
         p = p->next;
     }
-    cout << "Nama Kota Terkotor " << x->info.nama << " Dengan Indeks Kebersihan " << x->info.indeksKebersihan << endl;
+    cout << "Kota Terkotor " << x->info.nama << " Dengan Indeks Kebersihan " << x->info.indeksKebersihan << endl;
 }
 
 void indeksMax(ListKota L) {
@@ -298,49 +298,7 @@ void indeksMax(ListKota L) {
         }
         p = p->next;
     }
-    cout << "Nama Kota Terbersih " << x->info.nama << " Dengan Indeks Kebersihan " << x->info.indeksKebersihan << endl;
-}
-
-void bobotMin(ListKota L) {
-    adrKota p = L.first;
-    adrRiwayat q, r;
-
-    while (p != nullptr) {
-        q = p->firstRiwayat;
-        r = p->firstRiwayat;
-        while (q != nullptr) {
-            if (q->info.bobot < r->info.bobot) {
-                r = q;
-            }
-            q = q->next;
-        }
-        cout << "Kota: " << p->info.nama << endl;
-        cout << "Tanggal Pengangkutan: " << r->info.tanggal << endl;
-        cout << "Bobot Pengangkutan: " << r->info.bobot << endl;
-        cout << endl;
-        p = p->next;
-    }
-}
-
-void bobotMax(ListKota L) {
-    adrKota p = L.first;
-    adrRiwayat q, r;
-
-    while (p != nullptr) {
-        q = p->firstRiwayat;
-        r = p->firstRiwayat;
-        while (q != nullptr) {
-            if (q->info.bobot > r->info.bobot) {
-                r = q;
-            }
-            q = q->next;
-        }
-        cout << "Kota: " << p->info.nama << endl;
-        cout << "Tanggal Pengangkutan: " << r->info.tanggal << endl;
-        cout << "Bobot Pengangkutan: " << r->info.bobot << endl;
-        cout << endl;
-        p = p->next;
-    }
+    cout << "Kota Terbersih " << x->info.nama << " Dengan Indeks Kebersihan " << x->info.indeksKebersihan << endl;
 }
 
 void jumlahSampahKota(ListKota L) {
@@ -743,7 +701,6 @@ void queryIndeksBobotJenis(ListKota L, int indeksTarget, string rangeIndeks, dou
 
             while (q != nullptr) {
 
-                // ================= CEK BOBOT =================
                 bool bobotOK;
                 if (rangeBobot == "DIATAS") {
                     bobotOK = q->info.bobot > bobotTarget;
@@ -751,9 +708,8 @@ void queryIndeksBobotJenis(ListKota L, int indeksTarget, string rangeIndeks, dou
                     bobotOK = q->info.bobot < bobotTarget;
                 }
 
-                // ================= CEK JENIS =================
                 bool jenisOK = (q->info.jenisSampah == jenisSampah);
-                // ================= FINAL CHECK =================
+
                 if (bobotOK && jenisOK) {
 
                     if (!adaHasil) {
@@ -766,20 +722,13 @@ void queryIndeksBobotJenis(ListKota L, int indeksTarget, string rangeIndeks, dou
                     char tanggalStr[15];
                     sprintf(tanggalStr, "%02d-%02d-%02d", q->info.tanggal, q->info.bulan, q->info.tahun);
 
-                    printf(" | %-15s | %-6d | %-12s | %6.1f kg | %-10s |\n",
-                           p->info.nama.c_str(),
-                           p->info.indeksKebersihan,
-                           tanggalStr,
-                           q->info.bobot,
-                           q->info.jenisSampah.c_str());
+                    printf(" | %-15s | %-6d | %-12s | %6.1f kg | %-10s |\n", p->info.nama.c_str(), p->info.indeksKebersihan, tanggalStr, q->info.bobot, q->info.jenisSampah.c_str());
 
                     adaHasil = true;
                 }
-
                 q = q->next;
             }
         }
-
         p = p->next;
     }
 
@@ -790,3 +739,79 @@ void queryIndeksBobotJenis(ListKota L, int indeksTarget, string rangeIndeks, dou
     }
 }
 
+void queryPersentaseSampahPerOrang(ListKota L, int tanggal, int bulan, int tahun) {
+    adrKota p = L.first;
+    adrRiwayat q;
+    bool adaHasil = false;
+
+    cout << "\n=== PERSENTASE SAMPAH PER ORANG PER HARI ===\n";
+    cout << "Tanggal: " << tanggal << "-" << bulan << "-" << tahun << endl;
+    cout << "=================================================================================\n";
+    printf(" | %-15s | %-12s | %-10s | %-15s | %-12s |\n",
+           "Kota", "Total Sampah", "Penduduk", "Kg/Orang", "Persentase");
+    cout << "---------------------------------------------------------------------------------\n";
+    
+    while (p != nullptr) {
+        q = p->firstRiwayat;
+        double totalSampah = 0;
+        while (q != nullptr) {
+            if (q->info.tanggal == tanggal && q->info.bulan == bulan && q->info.tahun == tahun) {
+                totalSampah += q->info.bobot;
+            }
+            q = q->next;
+        }
+        if (totalSampah > 0 && p->info.jumlahPenduduk > 0) {
+            double kgPerOrang = totalSampah / p->info.jumlahPenduduk;
+            double persentasiPerPenduduk = kgPerOrang * 100;
+ 
+            printf(" | %-15s | %-9.2f kg | %-10d | %-15f | %-10f %% |\n", p->info.nama.c_str(), totalSampah, p->info.jumlahPenduduk, kgPerOrang, persentasiPerPenduduk);
+
+            adaHasil = true;
+        }
+        p = p->next;
+    }
+
+    if (adaHasil) {
+        cout << "=================================================================================\n";
+    } else {
+        cout << "Tidak ada data yang memenuhi kriteria." << endl;
+    }
+}
+
+void queryKepadatanSampah(ListKota L, int bulan, int tahun){
+    adrKota p = L.first;
+    adrRiwayat q;
+    double total;
+    bool adaHasil = false;
+
+    cout << "\n=== ANALISIS KEPADATAN SAMPAH PER HEKTAR ===\n";
+    cout << "Periode: Bulan " << bulan << " Tahun " << tahun << endl;
+    //cout << "Rumus  : Total Sampah (kg) / Luas Wilayah (Ha)" << endl;
+    
+    printf("============================================================================\n");
+    printf(" | %-15s | %-12s | %-12s | %-22s |\n", "Nama Kota", "Total Sampah", "Luas Wilayah", "Kepadatan (kg/Ha)");
+    printf("----------------------------------------------------------------------------\n");
+
+    while (p != nullptr) {
+        q = p->firstRiwayat;
+        total = 0;
+        while (q != nullptr) {
+            if (q->info.bulan == bulan && q->info.tahun == tahun) {
+                total = total + q->info.bobot;
+            }
+            q = q->next;
+        }
+
+        printf(" | %-15s | %-9.1f kg | %-9.1f Ha | %-16.2f kg/Ha |\n", p->info.nama.c_str(), total, p->info.luasWilayah, total/p->info.luasWilayah);
+
+        adaHasil = true;
+
+        p = p->next;        
+    }
+
+    if (adaHasil) {
+        printf("============================================================================\n");
+    } else {
+        cout << "Tidak ada data yang memenuhi kriteria bulan dan tahun." << endl;
+    }
+}
