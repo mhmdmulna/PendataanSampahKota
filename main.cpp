@@ -17,7 +17,7 @@ int main() {
     if (fileKota.is_open()) {
         while (fileKota >> dk.nama >> dk.luasWilayah >> dk.jumlahPenduduk >> dk.indeksKebersihan) {
             adrKota p = createElemenKota(dk);
-            insertKota(L, p);
+            insertLastKota(L, p);
         }
         fileKota.close();
     }
@@ -30,7 +30,7 @@ int main() {
             adrKota kotaP = searchKota(L, kotaTujuan);
 
             if (kotaP != nullptr) {
-                insertRiwayat(kotaP, q);
+                insertLastRiwayat(kotaP, q);
             }
         }
         fileRia.close();
@@ -67,21 +67,52 @@ int main() {
             cin >> pilihanSub;
 
             if (pilihanSub == 1) {
-                cout << "\n[INPUT KOTA BARU]" << endl;
-                cout << "Nama Kota (tanpa_spasi) : "; cin >> dk.nama;
-                adrKota searchK = searchKota(L, dk.nama);
-                if (searchK == nullptr) {
-                    cout << "Luas Wilayah (Hektar)   : "; cin >> dk.luasWilayah;
-                    cout << "Jumlah Penduduk         : "; cin >> dk.jumlahPenduduk;
-                    cout << "Indeks Kebersihan (1-10): "; cin >> dk.indeksKebersihan;
-                    
-                    pKota = createElemenKota(dk);
-                    insertKota(L, pKota);
-                    cout << ">>> Sukses menambah kota: " << dk.nama << endl;
-                } else {
-                    cout << "Nama kota " << dk.nama << " sudah ada di data. Silahkan masukkan nama kota lain atau menambah riwayat di kota " << dk.nama << "." << endl;
-                }
+                cout << "\n[PILIH KATEGORI INSERT]" << endl;
+                cout << "1. Insert First" << endl;
+                cout << "2. Insert After" << endl;
+                cout << "3. Insert Last" << endl;
+                cout << ">> Pilihan Kategori: ";
+                cin >> pilihanTampil;
 
+                if (pilihanTampil >= 1 && pilihanTampil <= 3) {
+                    
+                    cout << "\n[INPUT KOTA BARU]" << endl;
+                    cout << "Nama Kota (tanpa_spasi) : "; cin >> dk.nama;
+
+                    if (searchKota(L, dk.nama) == nullptr) {
+                        cout << "Luas Wilayah (Hektar)   : "; cin >> dk.luasWilayah;
+                        cout << "Jumlah Penduduk         : "; cin >> dk.jumlahPenduduk;
+                        cout << "Indeks Kebersihan (1-10): "; cin >> dk.indeksKebersihan;
+                        pKota = createElemenKota(dk);
+
+                        if (pilihanTampil == 1) {
+                            insertFirstKota(L, pKota);
+                            cout << ">>> Sukses menambah kota (First): " << dk.nama << endl;
+
+                        } else if (pilihanTampil == 2) {
+                            tampilkanListKota(L);
+                            int nomor;
+                            cout << "Masukkan nomor urut yang ingin disisipkan: ";
+                            cin >> nomor;
+
+                            if (nomor >= 1 && nomor < countKota(L)) {
+                                insertAfterKota(L, nomor, pKota);
+                                cout << ">>> Sukses menambah kota (After): " << dk.nama << endl;
+                            } else {
+                                cout << ">>> Gagal: Nomor referensi tidak valid untuk insert after." << endl;
+                            }
+
+                        } else if (pilihanTampil == 3) {
+                            insertLastKota(L, pKota);
+                            cout << ">>> Sukses menambah kota (Last): " << dk.nama << endl;
+                        }
+
+                    } else {
+                        cout << ">>> Gagal: Nama kota " << dk.nama << " sudah ada! Gunakan menu Ubah atau Tambah Riwayat." << endl;
+                    }
+                } else {
+                    cout << ">>> Pilihan kategori insert tidak valid!" << endl;
+                }
             } else if (pilihanSub == 2) {
                 updateKota(L);
             } else if (pilihanSub == 3) {
@@ -103,39 +134,51 @@ int main() {
             cin >> pilihanSub;
 
             if (pilihanSub == 1) {
-                tampilkanListKota(L);
-                cout << "\n[TAMBAH RIWAYAT]" << endl;
-                cout << "Masukkan Nama Kota Target: ";
-                cin >> inputNamaKota;
-                
-                pKota = searchKota(L, inputNamaKota);
-                if (pKota != nullptr) {
-                    cout << "Petugas (tanpa_spasi)                   : "; 
-                    cin >> dr.petugas;
-                    cout << "Tanggal                                 : "; 
-                    cin >> dr.tanggal;
-                    cout << "Bulan                                   : "; 
-                    cin >> dr.bulan;
-                    cout << "Tahun                                   : "; 
-                    cin >> dr.tahun;
-                    cout << "Jam (hh:mm)                             : "; 
-                    cin >> dr.jamPengambilan;
-                    cout << "Jenis Sampah (Organik/Anorganik)        : "; 
-                    cin >> dr.jenisSampah;
-                    cout << "Bobot (kg)                              : "; 
-                    cin >> dr.bobot;
-                    
-                    if (dr.tanggal <= 31 && dr.bulan <= 12 && dr.tahun <= 25) {
-                        pRiwayat = createElemenRiwayat(dr);
-                        insertRiwayat(pKota, pRiwayat);
-                        cout << ">>> Sukses menambah riwayat." << endl;
-                    } else {
-                        cout << "Format tanggal,bulan atau tahun invalid." << endl;
-                    }
-                } else {
-                    cout << ">>> Error: Kota tidak ditemukan!" << endl;
-                }
+            tampilkanListKota(L);
+            cout << "\n[INPUT RIWAYAT BARU]" << endl;
+            cout << "Nama Kota Target (tanpa_spasi) : "; cin >> inputNamaKota;
 
+            pKota = searchKota(L, inputNamaKota);
+            
+            if (pKota != nullptr) {
+                cout << "Petugas (tanpa_spasi)                   : "; cin >> dr.petugas;
+                cout << "Tanggal                                 : "; cin >> dr.tanggal;
+                cout << "Bulan                                   : "; cin >> dr.bulan;
+                cout << "Tahun                                   : "; cin >> dr.tahun;
+                cout << "Jam (hh:mm)                             : "; cin >> dr.jamPengambilan;
+                cout << "Jenis Sampah (Organik/Anorganik)        : "; cin >> dr.jenisSampah;
+                cout << "Bobot (kg)                              : "; cin >> dr.bobot;
+                
+                adrRiwayat pRiwayat = createElemenRiwayat(dr);
+                
+                cout << "\n[PILIH POSISI INSERT RIWAYAT]" << endl;
+                cout << "1. Insert First (Awal)" << endl;
+                cout << "2. Insert After (Tengah)" << endl;
+                cout << "3. Insert Last (Akhir)" << endl;
+                cout << ">> Pilihan Posisi: ";
+                cin >> pilihanTampil;
+                
+                if (pilihanTampil == 1) {
+                    insertFirstRiwayat(pKota, pRiwayat);
+                    cout << ">>> Sukses menambah riwayat (First)" << endl;
+                } else if (pilihanTampil == 2) {
+                    tampilkanRiwayatBernomor(pKota);
+                    int nomor;
+                    cout << "Masukkan nomor urut riwayat referensi: ";
+                    cin >> nomor;
+                    if (nomor >= 1 && nomor < countRiwayat(pKota)) {
+                        insertAfterRiwayat(pKota, nomor, pRiwayat);
+                        cout << ">>> Sukses menambah riwayat (After)" << endl;
+                    } else {
+                        cout << ">>> Gagal: Nomor referensi tidak valid." << endl;
+                    }
+                } else if (pilihanTampil == 3) {
+                    insertLastRiwayat(pKota, pRiwayat);
+                    cout << ">>> Sukses menambah riwayat (Last)" << endl;
+                }
+            } else {
+                cout << ">>> Gagal: Kota " << inputNamaKota << " tidak ditemukan!" << endl;
+            }
             } else if (pilihanSub == 2) {
                 tampilkanListKota(L);
                 cout << "\n[UBAH RIWAYAT]" << endl;

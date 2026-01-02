@@ -46,8 +46,12 @@ bool isEmptyKota(ListKota L);
 bool isEmptyRiwayat(adrKota p);
 
 // INSERT
-void insertKota(ListKota &L, adrKota p);
-void insertRiwayat(adrKota &p, adrRiwayat q);
+void insertFirstKota(ListKota &L, adrKota p);
+void insertAfterKota(ListKota &L, int no, adrKota p);
+void insertLastKota(ListKota &L, adrKota p);
+void insertFirstRiwayat(adrKota &p, adrRiwayat q);
+void insertAfterRiwayat(adrKota &p, int no, adrRiwayat q);
+void insertLastRiwayat(adrKota &p, adrRiwayat q);
 
 // DELETE
 void deleteFirstRiwayat(adrKota p, adrRiwayat &q);
@@ -67,6 +71,7 @@ void display(ListKota L);
 void indeksMin(ListKota L);
 void indeksMax(ListKota L);
 int countRiwayat(adrKota Kota);
+int countKota(ListKota L);
 void jumlahSampahKota(ListKota L);
 void tampilkanRiwayatBernomor(adrKota pKota);
 void tampilkanListKota(ListKota L);

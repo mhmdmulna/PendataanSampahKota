@@ -30,8 +30,33 @@ bool isEmptyKota(ListKota L) {
 bool isEmptyRiwayat(adrKota p) {
     return p->firstRiwayat == nullptr;
 }
+// Arman
+void insertFirstKota(ListKota &L, adrKota p) {
+    if (isEmptyKota(L)) {
+        L.first = p;
+    } else {
+        p->next = L.first;
+        L.first = p;
+    }
+}
 
-void insertKota(ListKota &L, adrKota p) {
+void insertAfterKota(ListKota &L, int no, adrKota p) {
+    if (no < 1 || no >= countKota(L)) {
+        cout << ">>> Nomor referensi tidak valid!" << endl;
+    } else {
+        adrKota q = L.first;
+        int i = 1;
+    
+        while (i != no) {
+            q = q->next;
+            i++;
+        }
+        p->next = q->next;
+        q->next = p;
+    }
+}
+
+void insertLastKota(ListKota &L, adrKota p) {
     adrKota q = L.first;
 
     if (isEmptyKota(L)) {
@@ -43,27 +68,56 @@ void insertKota(ListKota &L, adrKota p) {
         q->next = p;
     }
 }
-
-void insertRiwayat(adrKota &p, adrRiwayat q) {
-    adrRiwayat r = p->firstRiwayat;
-
+// Bred
+void insertFirstRiwayat(adrKota &p, adrRiwayat q) {
     if (isEmptyRiwayat(p)) {
         p->firstRiwayat = q;
     } else {
+        q->next = p->firstRiwayat;
+        p->firstRiwayat = q;
+    }
+}
+
+void insertAfterRiwayat(adrKota &p, int no, adrRiwayat q) {
+    if (no < 1 || no >= countRiwayat(p)) {
+        cout << ">>> Nomor referensi tidak valid!" << endl;
+    } else {
+        adrRiwayat r = p->firstRiwayat;
+        int i = 1;
+    
+        while (i < no) {
+            r = r->next;
+            i++;
+        }
+        q->next = r->next;
+        r->next = q;
+    }
+}
+
+void insertLastRiwayat(adrKota &p, adrRiwayat q) {
+    if (isEmptyRiwayat(p)) {
+        p->firstRiwayat = q;
+    } else {
+        adrRiwayat r = p->firstRiwayat;
+    
         while (r->next != nullptr) {
             r = r->next;
         }
         r->next = q;
     }
 }
-
+// Arman
 void deleteKota(ListKota &L, string namaKota) {
     adrKota p = searchKota(L, namaKota);
     adrKota q = L.first;
+    adrRiwayat del;
 
     if (p == nullptr) {
         cout << "Data Kota Tidak Ditemukan!";
     } else {
+        while (p->firstRiwayat != nullptr) {
+            deleteFirstRiwayat(p, del);
+        }
         if (p == L.first) {
             L.first->next = p->next;
             p->next = nullptr;
@@ -77,7 +131,7 @@ void deleteKota(ListKota &L, string namaKota) {
         cout << "Penghapusan kota " << p->info.nama << " berhasil dilakukan." << endl;
     }
 }
-
+// Bred
 void deleteFirstRiwayat(adrKota p, adrRiwayat &q) {
     if (isEmptyRiwayat(p)) {
         q = nullptr;
@@ -116,11 +170,22 @@ void deleteAfterRiwayat(adrKota Kota, int no, adrRiwayat &q) {
     p->next = q->next;
     q->next = nullptr;
 }
-
+// Arman
 int countRiwayat(adrKota Kota) {
     adrRiwayat p = Kota->firstRiwayat;
     int i = 0;
 
+    while (p != nullptr) {
+        i++;
+        p = p->next;
+    }
+    return i;
+}
+
+int countKota(ListKota L) {
+    adrKota p = L.first;
+    int i = 0;
+    
     while (p != nullptr) {
         i++;
         p = p->next;
@@ -174,7 +239,7 @@ void display(ListKota L) {
         p = p->next;
     }
 }
-
+// Bred
 adrKota searchKota(ListKota L, string namaK) {
     adrKota p = L.first;
 
@@ -220,7 +285,7 @@ void searchJenisSampah(ListKota L, string jenisSampah) {
         cout << "Tidak ada data dengan jenis sampah \"" << jenisSampah << "\" ditemukan.\n";
     }
 }
-
+// Arman
 void updateRiwayat(ListKota &L, adrKota pKota) {
     if (pKota != nullptr && !isEmptyRiwayat(pKota)) {
 
@@ -250,7 +315,7 @@ void updateRiwayat(ListKota &L, adrKota pKota) {
         cout << ">>> Kota tidak ditemukan atau riwayat kosong!" << endl;
     }
 }
-
+// Bred
 void updateKota(ListKota &L) {
     tampilkanListKota(L);    
 
@@ -300,24 +365,29 @@ void indeksMax(ListKota L) {
     }
     cout << "Kota Terbersih " << x->info.nama << " Dengan Indeks Kebersihan " << x->info.indeksKebersihan << endl;
 }
-
+// Arman
 void jumlahSampahKota(ListKota L) {
     adrKota p = L.first;
     adrRiwayat q;
-    double jumlahsampah = 0;
+
+    cout << "\n=== TOTAL SAMPAH PER KOTA ===\n";
+    cout << "=============================================\n";
+    printf(" | %-20s | %-15s |\n", "Nama Kota", "Total Sampah");
+    cout << "=============================================\n";
 
     while (p != nullptr) {
+        double jumlahsampah = 0;
         q = p->firstRiwayat;
         while (q != nullptr) {
             jumlahsampah += q->info.bobot; 
             q = q->next;
         }
-        cout << "Kota        : " << p->info.nama << endl;
-        cout << "Total Sampah: " << jumlahsampah << " kg" << endl << endl;
+        printf(" | %-20s | %12.2f kg |\n", p->info.nama.c_str(), jumlahsampah);
         p = p->next;
     }
+    cout << "============================================\n";
 }
-
+// Bred
 void sortingTanggalTerlama(ListKota L) {
 
     adrKota p = L.first;
@@ -354,7 +424,7 @@ void sortingTanggalTerlama(ListKota L) {
         p = p->next;
     }
 }
-
+// Arman
 void sortingTanggalTerbaru(ListKota L) {
     
     adrKota p = L.first;
@@ -391,7 +461,7 @@ void sortingTanggalTerbaru(ListKota L) {
         p = p->next;
     }
 }
-
+// Bred
 void sortingBobotTerendah(ListKota L) {
     adrKota p = L.first;
     adrRiwayat q, r;
@@ -416,7 +486,7 @@ void sortingBobotTerendah(ListKota L) {
         p = p->next;
     }
 }
-
+// Arman
 void sortingBobotTertinggi(ListKota L) {
     adrKota p = L.first;
     adrRiwayat q, r;
@@ -480,7 +550,7 @@ adrRiwayat getRiwayatByIndex(adrKota pKota, int index) {
     }
     return nullptr;
 }
-
+// Bred
 void tampilkanListKota(ListKota L) {
     if (isEmptyKota(L)) {
         cout << ">>> Tidak ada data kota.\n";
@@ -558,7 +628,7 @@ void queryKotaTanggalTerbaru(ListKota L, string namaKota) {
     cout << "==================================================================================" << endl;
     cout << endl;
 }
-
+// Arman
 void queryKotaTanggalTerlama(ListKota L, string namaKota) {
     adrKota searchK = searchKota(L, namaKota);
     adrRiwayat q, r;
@@ -612,71 +682,82 @@ void queryKotaTanggalTerlama(ListKota L, string namaKota) {
     cout << "==================================================================================" << endl;
     cout << endl;
 }
-
+// Bred
 void queryDiatasBobotTanggal(ListKota L, double bobot, int tanggal, int bulan, int tahun) {
     adrKota p = L.first;
     adrRiwayat q;
     int i = 1;
+    bool adaHasil = false;
+    
+    cout << "---  HASIL QUERY  ---" << endl;
+    cout << "Kriteria: Bobot >= " << bobot << " kg pada " << tanggal << "-" << bulan << "-" << tahun << endl;
     
     while (p != nullptr) {
         q = p->firstRiwayat;
         while (q != nullptr) {
             if (q->info.tanggal == tanggal && q->info.bulan == bulan && q->info.tahun == tahun && q->info.bobot >= bobot) {
-                cout << "---  HASIL QUERY  ---" << endl;
-                cout << "Nama Kota: " << p->info.nama << endl;
-                cout << "==================================================================================" << endl;
-                printf(" | %-3s | %-12s | %-5s | %-15s | %-15s | %-9s |\n", "No", "Tanggal", "Jam", "Petugas", "Jenis Sampah", "Bobot");       
-                printf(" |-----|--------------|-------|-----------------|-----------------|-----------|\n");
+                if (!adaHasil) {
+                    cout << "==================================================================================" << endl;
+                    printf(" | %-15s | %-12s | %-5s | %-15s | %-9s |\n", "Kota", "Tanggal", "Jam", "Petugas", "Bobot");       
+                    printf(" |-----------------|--------------|-------|-----------------|-----------|\n");
+                }
                 
                 char tanggalStr[15];
                 sprintf(tanggalStr, "%02d-%02d-%02d", q->info.tanggal, q->info.bulan, q->info.tahun);
 
-                printf(" | %-3d | %-12s | %-5s | %-15s | %-15s | %6.1f kg |\n",
-                i, tanggalStr, q->info.jamPengambilan.c_str(), q->info.petugas.c_str(), q->info.jenisSampah.c_str(), q->info.bobot);
+                printf(" | %-15s | %-12s | %-5s | %-15s | %6.1f kg |\n",
+                p->info.nama.c_str(), tanggalStr, q->info.jamPengambilan.c_str(), q->info.petugas.c_str(), q->info.bobot);
 
-                i++;
-                cout << "==================================================================================" << endl;
-                cout << endl;
-            } else {
-                cout << "Input anda tidak sesuai dengan format." << endl;
+                adaHasil = true;
             }
             q = q->next;
         }
         p = p->next;
     }
+    
+    if (adaHasil) {
+        cout << "==================================================================================" << endl;
+    } else {
+        cout << "Tidak ada data yang memenuhi kriteria." << endl;
+    }
 }
-
+// Arman
 void queryDibawahBobotTanggal(ListKota L, double bobot, int tanggal, int bulan, int tahun) {
     adrKota p = L.first;
     adrRiwayat q;
     int i = 1;
+    bool adaHasil = false;
+    
+    cout << "---  HASIL QUERY  ---" << endl;
+    cout << "Kriteria: Bobot <= " << bobot << " kg pada " << tanggal << "-" << bulan << "-" << tahun << endl;
     
     while (p != nullptr) {
         q = p->firstRiwayat;
         while (q != nullptr) {
             if (q->info.tanggal == tanggal && q->info.bulan == bulan && q->info.tahun == tahun && q->info.bobot <= bobot) {
-                cout << "---  HASIL QUERY  ---" << endl;
-                cout << "Nama Kota: " << p->info.nama << endl;
-                cout << "==================================================================================" << endl;
-                printf(" | %-3s | %-12s | %-5s | %-15s | %-15s | %-9s |\n", "No", "Tanggal", "Jam", "Petugas", "Jenis Sampah", "Bobot");       
-                printf(" |-----|--------------|-------|-----------------|-----------------|-----------|\n");
+                if (!adaHasil) {
+                    cout << "==================================================================================" << endl;
+                    printf(" | %-15s | %-12s | %-5s | %-15s | %-9s |\n", "Kota", "Tanggal", "Jam", "Petugas", "Bobot");       
+                    printf(" |-----------------|--------------|-------|-----------------|-----------|\n");
+                }
                 
-
                 char tanggalStr[15];
                 sprintf(tanggalStr, "%02d-%02d-%02d", q->info.tanggal, q->info.bulan, q->info.tahun);
 
-                printf(" | %-3d | %-12s | %-5s | %-15s | %-15s | %6.1f kg |\n",
-                i, tanggalStr, q->info.jamPengambilan.c_str(), q->info.petugas.c_str(), q->info.jenisSampah.c_str(), q->info.bobot);
+                printf(" | %-15s | %-12s | %-5s | %-15s | %6.1f kg |\n",
+                p->info.nama.c_str(), tanggalStr, q->info.jamPengambilan.c_str(), q->info.petugas.c_str(), q->info.bobot);
 
-                i++;
-                cout << "==================================================================================" << endl;
-                cout << endl;
-            } else {
-                cout << "Input anda tidak sesuai dengan format." << endl;
+                adaHasil = true;
             }
             q = q->next;
         }
         p = p->next;
+    }
+    
+    if (adaHasil) {
+        cout << "==================================================================================" << endl;
+    } else {
+        cout << "Tidak ada data yang memenuhi kriteria." << endl;
     }
 }
 
@@ -738,7 +819,7 @@ void queryIndeksBobotJenis(ListKota L, int indeksTarget, string rangeIndeks, dou
         cout << ">>> Tidak ada data yang memenuhi kriteria.\n";
     }
 }
-
+// Bred
 void queryPersentaseSampahPerOrang(ListKota L, int tanggal, int bulan, int tahun) {
     adrKota p = L.first;
     adrRiwayat q;
@@ -777,7 +858,7 @@ void queryPersentaseSampahPerOrang(ListKota L, int tanggal, int bulan, int tahun
         cout << "Tidak ada data yang memenuhi kriteria." << endl;
     }
 }
-
+// Arman
 void queryKepadatanSampah(ListKota L, int bulan, int tahun){
     adrKota p = L.first;
     adrRiwayat q;
@@ -802,7 +883,13 @@ void queryKepadatanSampah(ListKota L, int bulan, int tahun){
             q = q->next;
         }
 
-        printf(" | %-15s | %-9.1f kg | %-9.1f Ha | %-16.2f kg/Ha |\n", p->info.nama.c_str(), total, p->info.luasWilayah, total/p->info.luasWilayah);
+        printf(" | %-15s | %-9.1f kg | %-9.1f Ha | ", p->info.nama.c_str(), total, p->info.luasWilayah);
+        
+        if (p->info.luasWilayah > 0) {
+            printf("%-16.2f kg/Ha |\n", total / p->info.luasWilayah);
+        } else {
+            printf("%-16s |\n", "N/A");
+        }
 
         adaHasil = true;
 
